@@ -6,10 +6,7 @@ import { Filter } from './Filter/Filter';
 const LOCAL_STORAGE_KEY = 'contacts';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const storedContacts = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return storedContacts ? JSON.parse(storedContacts) : [];
-  });
+  const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
@@ -35,7 +32,8 @@ export const App = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts));
+    contacts.length &&
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts));
   }, [contacts]);
 
   const handleDeleteContact = contactId => {
