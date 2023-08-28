@@ -6,17 +6,15 @@ import { Filter } from './Filter/Filter';
 const LOCAL_STORAGE_KEY = 'contacts';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => {
+    const storedContacts = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return JSON.parse(storedContacts) || [];
+  });
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    const storedContacts = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const parsedContacts = JSON.parse(storedContacts);
-
-    if (parsedContacts) {
-      setContacts(parsedContacts);
-    }
-  }, []);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContacts = contact => {
     const isExist = contacts.find(
@@ -30,11 +28,6 @@ export const App = () => {
 
     setContacts(prevContacts => [...prevContacts, contact]);
   };
-
-  useEffect(() => {
-    contacts.length &&
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts));
-  }, [contacts]);
 
   const handleDeleteContact = contactId => {
     setContacts(prevContacts =>
